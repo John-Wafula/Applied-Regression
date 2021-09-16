@@ -1,0 +1,123 @@
+---
+title: "STA 316 ASSIGNMENT"
+author: "JOHN WAFULA-AST/54/19"
+date: "8/15/2021"
+output: html_document
+---
+
+```{r}
+library(haven)
+ bab9 <- read_stata("C:/Users/sa/Downloads/BAB9.txt")
+ head(bab9)
+```
+```{r}
+summary(bab9)
+```
+
+```{r}
+library(psych)
+describe(bab9)
+```
+
+```{r}
+hist(bab9$bweight)
+```
+
+```{r}
+#check the class for each variable
+library(dplyr)
+bab9 %>% sapply(class)
+```
+
+```{r}
+library(ggplot2)
+ggplot(data=bab9,aes(x=matage,y=bweight))+geom_point(color="blue")+geom_smooth(method="lm",se=F)+
+  ggtitle("REGRESSION LINE SHOWING MATAGE AGAINST WEIGHT")
+```
+
+```{r}
+model<-lm(bweight~matage,data=bab9)
+model
+summary(model)
+```
+
+```{r}
+#--- Generate 95% confidence intervals
+confint(model)
+```
+
+Do you think that there is a linear relationship between these variables? 
+
+ *No*
+
+What is the strength of evidence against the hypothesis that the coefficient B is zero? 
+
+ *Zero is not part of The confidence interval range in b*.
+
+What is the equation of the fitted line?
+
+ Y=2935.985 +5.686x
+ 
+## Test the assumptions in the above model
+ 
+```{r}
+plot(model)
+```
+
+
+
+The diagnostic plots show residuals in four different ways:
+
+
+
+1.Residuals vs Fitted. Used to check the linear relationship assumptions. A horizontal line, without distinct patterns is an indication for a linear relationship, what is good.
+
+2.Normal Q-Q. Used to examine whether the residuals are normally distributed. It’s good if residuals points follow the straight dashed line.
+
+3.Scale-Location (or Spread-Location). Used to check the homogeneity of variance of the residuals (homoscedasticity). Horizontal line with equally spread points is a good indication of homoscedasticity. This is not the case in our example, where we have a heteroscedasticity problem.
+
+4.Residuals vs Leverage. Used to identify influential cases, that is extreme values that might influence the regression results when included or excluded from the analysis. This plot will be described further in the next sections.
+
+## Question 3
+
+Fitting a multiple linear regression model with birth weight (bweight) as outcome and maternal age (matage), gestation age in categories (gestcat) and sex as predictor
+
+a)Assess correlation between the 4 variables bweight, matage, gestcat and sex
+
+```{r}
+data<-data.frame(bab9$bweight,bab9$matage,bab9$gestcat,bab9$sex)
+library(corrplot)
+b<-cor(data)
+
+b 
+corrplot(cor(data)
+)
+```
+
+b.	What is the overall fit of the model
+
+```{r}
+model2<-lm(bweight~matage+gestcat+sex,data=bab9)
+summary(model2)
+
+```
+c.	Write down the fitted model based on the model
+
+Y = 1146.936+3.169x1+1132.749x2-156.671x3
+
+
+d.	Interpret the coefficients in the model
+
+This means that all else being equal, each unit increase in
+birth weight  results in 3.169 units increase in maternal age, while (again all else being equal) each increase
+of one unit in weight is associated with 1132.749  increase
+in gestation age in categories.
+
+
+e.	Which variables are significantly associated with maternal age
+
+1.Gestation Age in Categories
+
+2.Sex
+
+
